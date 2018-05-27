@@ -16,7 +16,7 @@
 // the stack is the one that pop out
 
 
-#define STACKSIZE 5
+#define STACKSIZE 3
 
 typedef struct stackitem {
 	int data;
@@ -30,21 +30,43 @@ STACKITEM *base;
 // just define them.
 
 void push(STACKITEM *item) {
+	if (top == end) {
+		printf("The stack is at full capacity\n");
+		return;
+	}
+
 	memcpy(top, item, sizeof(STACKITEM));
 	top++;
 }
 
+STACKITEM pop() {
+	if (top == end) {
+		printf("The stack is empty nothing to pop\n");
+		STACKITEM item;
+		return item;
+	}
+
+	top--;
+	STACKITEM item = *(top);
+	printf("Popping item with value %d\n", item.data);
+	return item;
+}
+
 int main(void) {
+	// For pushing it seems that it does not matter whether or not
+	// you go over the stack.
+	//	This is dangerous cuz we might be overriding other important
+	//	part of memory allocated for other purposes.
+
 	base = (STACKITEM *) malloc(STACKSIZE * sizeof(STACKITEM));
+	end = base + STACKSIZE;
 	top = base;
 
-	STACKITEM item1;
-	item1.data = 1;
-	push(&item1);
-
-	STACKITEM item2;
-	item2.data = 2;
-	push(&item2);
+	for (int i = 0; i < 4; i++) {
+		STACKITEM item;
+		item.data = i;
+		push(&item);
+	}
 
 	STACKITEM *q = base;
 
